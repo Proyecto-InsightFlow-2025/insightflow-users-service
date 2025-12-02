@@ -12,17 +12,14 @@ namespace insightflow_users_service.src.Helpers.Requests
     public class UserQuery
     {
         /// <summary>
-        /// Gets or sets the full name to filter users by.
+        /// Gets or sets the first name to filter users by.
         /// </summary>
-        /// <value>
-        /// A string containing the full name or part of the full name to search for.
-        /// If null or empty, no filtering by full name is applied.
-        /// </value>
-        /// <remarks>
-        /// This filter performs a case-insensitive partial match on the client's full name
-        /// (combination of first name and last names).
-        /// </remarks>
-        public string? FullName { get; set; } = string.Empty;
+        public string? FirstName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last names to filter users by.
+        /// </summary>
+        public string? LastNames { get; set; }
 
         /// <summary>
         /// Gets or sets the email address to filter users by.
@@ -35,6 +32,11 @@ namespace insightflow_users_service.src.Helpers.Requests
         /// This filter performs a case-insensitive partial match on the client's email address.
         /// </remarks>
         public string? Email { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the username to filter users by.
+        /// </summary>
+        public string? Username { get; set; }
         
         /// <summary>
         /// Gets or sets the active status to filter users by.

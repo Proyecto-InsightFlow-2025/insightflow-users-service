@@ -27,14 +27,19 @@ namespace insightflow_users_service.src.Repositories
             var usersQuery = _context.Users.AsQueryable();
 
             // 2. Apply Filters
-            if (!string.IsNullOrWhiteSpace(query.FullName))
+            if (!string.IsNullOrWhiteSpace(query.FirstName))
             {
-                usersQuery = usersQuery.Where(u => u.FullName.Contains(query.FullName, StringComparison.OrdinalIgnoreCase));
+                usersQuery = usersQuery.Where(u => u.FirstName.Contains(query.FirstName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.LastNames))
+            {
+                usersQuery = usersQuery.Where(u => u.LastNames.Contains(query.LastNames, StringComparison.OrdinalIgnoreCase));
             }
 
             if (!string.IsNullOrWhiteSpace(query.Email))
             {
-                usersQuery = usersQuery.Where(u => u.Email.Equals(query.Email, StringComparison.OrdinalIgnoreCase));
+                usersQuery = usersQuery.Where(u => u.Email.Contains(query.Email, StringComparison.OrdinalIgnoreCase));
             }
 
             if (!string.IsNullOrWhiteSpace(query.Username))
@@ -52,7 +57,8 @@ namespace insightflow_users_service.src.Repositories
             {
                 usersQuery = query.SortBy switch
                 {
-                    "FullName" => query.IsDescending ? usersQuery.OrderByDescending(u => u.FullName) : usersQuery.OrderBy(u => u.FullName),
+                    "FirstName" => query.IsDescending ? usersQuery.OrderByDescending(u => u.FirstName) : usersQuery.OrderBy(u => u.FirstName),
+                    "LastNames" => query.IsDescending ? usersQuery.OrderByDescending(u => u.LastNames) : usersQuery.OrderBy(u => u.LastNames),
                     "Email" => query.IsDescending ? usersQuery.OrderByDescending(u => u.Email) : usersQuery.OrderBy(u => u.Email),
                     "Username" => query.IsDescending ? usersQuery.OrderByDescending(u => u.Username) : usersQuery.OrderBy(u => u.Username),
                     "CreatedAt" => query.IsDescending ? usersQuery.OrderByDescending(u => u.CreatedAt) : usersQuery.OrderBy(u => u.CreatedAt),
@@ -95,14 +101,15 @@ namespace insightflow_users_service.src.Repositories
             // In Memory, we are working with references. 
             // If the object passed here is the same reference from the list, it's already updated.
             // If it's a new object (from a PUT request), we need to find the old one and replace values.
-            
+
             var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
             if (existingUser != null)
             {
-                existingUser.FullName = user.FullName;
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastNames = user.LastNames;
                 existingUser.Username = user.Username;
                 existingUser.Email = user.Email; // Ideally validate unique again before this
-                existingUser.DateOfBirth = user.DateOfBirth;
+                existingUser.Birthdate = user.Birthdate;
                 existingUser.Address = user.Address;
                 existingUser.PhoneNumber = user.PhoneNumber;
                 // Do not update Password or ID here usually unless specific flow
