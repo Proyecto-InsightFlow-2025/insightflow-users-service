@@ -127,7 +127,7 @@ namespace insightflow_users_service.src.Controllers
             UserMapper.UpdateUserFromDto(user, dto);
             await _repository.UpdateAsync(user);
 
-            return NoContent();
+            return Ok(user.ToViewUserResponse());
         }
 
         /// <summary>
