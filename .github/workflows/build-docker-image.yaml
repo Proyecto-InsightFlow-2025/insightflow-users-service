@@ -24,4 +24,4 @@ jobs:
         with:
           context: "{{defaultContext}}"
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/as-hackend:latest , ${{ secrets.DOCKERHUB_USERNAME }}/as-hackend:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/insightflow-users-service:latest , ${{ secrets.DOCKERHUB_USERNAME }}/insightflow-users-service:${{ github.sha }}
