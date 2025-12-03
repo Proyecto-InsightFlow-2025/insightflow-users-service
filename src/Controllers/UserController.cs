@@ -132,7 +132,7 @@ namespace insightflow_users_service.src.Controllers
         /// Returns 403 Forbidden if the token does not belong to an authorized role.
         /// Returns 404 Not Found if the User does not exist.
         /// </returns>
-        [HttpPatch("delete/{id:guid}")]
+        [HttpDelete("delete/{id:guid}")]
         public async Task<ActionResult> SoftDelete(Guid id, [FromHeader(Name = "Authorization")] string authHeader)
         {
             // if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
