@@ -14,7 +14,7 @@ namespace insightflow_users_service.src.Controllers
     [Route("user")]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _repository; 
+        private readonly IUserRepository _repository;
 
         /// <summary>
         /// Initializes a new instance of the UserController class.
@@ -62,8 +62,13 @@ namespace insightflow_users_service.src.Controllers
         /// Returns 400 Bad Request if the model state is invalid.
         /// </returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] UserQuery query)
+        public async Task<IActionResult> GetAll([FromQuery] UserQuery query, [FromQuery] Guid requestUserId)
         {
+            if (requestUserId == Guid.Empty)
+            {
+                return Unauthorized(new { message = "Debes iniciar sesión para ver la lista de usuarios." });
+            }
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -108,8 +113,13 @@ namespace insightflow_users_service.src.Controllers
         /// Returns 404 Not Found if the User does not exist.
         /// </returns>
         [HttpPatch("{id:guid}")]
-        public async Task<ActionResult> Update(Guid id, [FromBody] CreateUserRequest dto)
+        public async Task<ActionResult> Update(Guid id, [FromBody] CreateUserRequest dto, [FromQuery] Guid requestUserId)
         {
+            if (id != requestUserId)
+            {
+                return Unauthorized(new { message = "No tienes permisos para editar este perfil." });
+            }
+
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
                 return NotFound();
@@ -164,9 +174,17 @@ namespace insightflow_users_service.src.Controllers
             // 1. Find user by Email
             var user = await _repository.GetByEmailAsync(loginDto.Email);
 
-            // 2. Validate User exists and Password matches
-            // (In a real app, verify hash. Here we compare strings per workshop scope)
-            if (user == null || user.PasswordHash != loginDto.Password)
+            // 2. Validate User exists
+            if (user == null)
+            {
+                // Return the same error message for security (don't reveal if user exists)
+                return Unauthorized(new { message = "Credenciales incorrectas" });
+            }
+
+            // 3. Verify the password using BCrypt
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
+
+            if (!isPasswordValid)
             {
                 return Unauthorized(new { message = "Credenciales incorrectas" });
             }
