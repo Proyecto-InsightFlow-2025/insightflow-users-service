@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "7a65d9db-87c2-4b53-a729-e71bbe471808",
+		"name": "Users Service",
+		"description": "Colección de pruebas para el microservicio de Usuarios de InsightFlow (Taller 3).\nIncluye scripts de prueba para capturar automáticamente el ID del usuario tras el Login o Creación.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34959447"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.id) {",
+							"    pm.collectionVariables.set(\"userId\", jsonData.id);",
+							"    console.log(\"New User ID set to: \" + jsonData.id);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"Nuevo\",\n  \"lastName\": \"Usuario\",\n  \"email\": \"nuevo@insightflow.cl\",\n  \"username\": \"nusuario\",\n  \"password\": \"Password123!\",\n  \"birthdate\": \"1995-05-20\",\n  \"address\": \"Av. Brasil 123\",\n  \"phoneNumber\": \"+56912345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					]
+				},
+				"description": "Crea un nuevo usuario. También actualiza la variable `userId` con el ID del usuario recién creado."
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user?pageNumber=1&pageSize=10&firstName=Ignacio",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						},
+						{
+							"key": "firstName",
+							"value": "Ignacio"
+						}
+					]
+				},
+				"description": "Obtiene la lista paginada de usuarios."
+			},
+			"response": []
+		},
+		{
+			"name": "Get User By ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/{{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{userId}}"
+					]
+				},
+				"description": "Usa la variable `userId` (configurada por Login o Create) para buscar un usuario específico."
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"firstName\": \"Nuevo\",\n  \"lastName\": \"Usuario Actualizado\",\n  \"email\": \"nuevo.actualizado@insightflow.cl\",\n  \"username\": \"nusuario_actualizado\",\n  \"password\": \"NewPassword123!\",\n  \"birthdate\": \"1996-06-21\",\n  \"address\": \"Av. Providencia 456\",\n  \"phoneNumber\": \"+56998765432\",\n  \"role\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/{{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"{{userId}}"
+					]
+				},
+				"description": "Actualiza los datos del usuario identificado por `userId`. Nota: Requiere enviar el objeto completo o parcial según tu implementación de CreateUserRequest."
+			},
+			"response": []
+		},
+		{
+			"name": "Soft Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/user/delete/{{userId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"delete",
+						"{{userId}}"
+					]
+				},
+				"description": "Marca el usuario como inactivo (`IsActive = false`)."
+			},
+			"response": []
+		},
+		{
+			"name": "Login (Set Token/ID)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.id) {",
+							"    pm.collectionVariables.set(\"userId\", jsonData.id);",
+							"    console.log(\"User ID set to: \" + jsonData.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"ignacio@insightflow.cl\",\n    \"password\": \"Password123!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/user/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				},
+				"description": "Inicia sesión con un usuario del Seeder. Guarda automáticamente el `id` retornado en la variable de colección `userId` para usarlo en otras peticiones."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5003",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
