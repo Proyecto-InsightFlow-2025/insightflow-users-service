@@ -32,9 +32,9 @@ namespace insightflow_users_service.src.Repositories
                 usersQuery = usersQuery.Where(u => u.FirstName.Contains(query.FirstName, StringComparison.OrdinalIgnoreCase));
             }
 
-            if (!string.IsNullOrWhiteSpace(query.LastNames))
+            if (!string.IsNullOrWhiteSpace(query.LastName))
             {
-                usersQuery = usersQuery.Where(u => u.LastNames.Contains(query.LastNames, StringComparison.OrdinalIgnoreCase));
+                usersQuery = usersQuery.Where(u => u.LastName.Contains(query.LastName, StringComparison.OrdinalIgnoreCase));
             }
 
             if (!string.IsNullOrWhiteSpace(query.Email))
@@ -58,7 +58,7 @@ namespace insightflow_users_service.src.Repositories
                 usersQuery = query.SortBy switch
                 {
                     "FirstName" => query.IsDescending ? usersQuery.OrderByDescending(u => u.FirstName) : usersQuery.OrderBy(u => u.FirstName),
-                    "LastNames" => query.IsDescending ? usersQuery.OrderByDescending(u => u.LastNames) : usersQuery.OrderBy(u => u.LastNames),
+                    "LastName" => query.IsDescending ? usersQuery.OrderByDescending(u => u.LastName) : usersQuery.OrderBy(u => u.LastName),
                     "Email" => query.IsDescending ? usersQuery.OrderByDescending(u => u.Email) : usersQuery.OrderBy(u => u.Email),
                     "Username" => query.IsDescending ? usersQuery.OrderByDescending(u => u.Username) : usersQuery.OrderBy(u => u.Username),
                     "CreatedAt" => query.IsDescending ? usersQuery.OrderByDescending(u => u.CreatedAt) : usersQuery.OrderBy(u => u.CreatedAt),
@@ -106,7 +106,7 @@ namespace insightflow_users_service.src.Repositories
             if (existingUser != null)
             {
                 existingUser.FirstName = user.FirstName;
-                existingUser.LastNames = user.LastNames;
+                existingUser.LastName = user.LastName;
                 existingUser.Username = user.Username;
                 existingUser.Email = user.Email; // Ideally validate unique again before this
                 existingUser.Birthdate = user.Birthdate;

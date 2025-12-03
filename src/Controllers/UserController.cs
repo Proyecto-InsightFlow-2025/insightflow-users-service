@@ -183,7 +183,7 @@ namespace insightflow_users_service.src.Controllers
                 Id = user.Id,
                 Username = user.Username,
                 FirstName = user.FirstName,
-                LastNames = user.LastNames,
+                LastName = user.LastName,
                 Email = user.Email
             });
         }

@@ -19,7 +19,7 @@ namespace insightflow_users_service.src.Helpers.Requests
         /// <summary>
         /// Gets or sets the last names to filter users by.
         /// </summary>
-        public string? LastNames { get; set; }
+        public string? LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the email address to filter users by.
@@ -51,11 +51,11 @@ namespace insightflow_users_service.src.Helpers.Requests
         /// Gets or sets the property name to sort the results by.
         /// </summary>
         /// <value>
-        /// The name of the client property to sort by ("FirstName", "LastNames", "Email", "Username" or "CreatedAt").
+        /// The name of the client property to sort by ("FirstName", "", "Email", "Username" or "CreatedAt").
         /// If null or empty, default sorting is applied.
         /// </value>
         /// <remarks>
-        /// Supported sort fields typically include: FirstName, LastNames, Email, Username or CreatedAt.
+        /// Supported sort fields typically include: FirstName, LastName, Email, Username or CreatedAt.
         /// </remarks>
         public string? SortBy { get; set; } = string.Empty;
 

@@ -54,7 +54,7 @@ namespace insightflow_users_service.src.Mappers
             {
                 Id = Guid.NewGuid(),
                 FirstName = dto.FirstName,
-                LastNames = dto.LastName,
+                LastName = dto.LastName,
                 Email = dto.Email,
                 Username = dto.Username,
                 Birthdate = dto.BirthDate,
@@ -78,7 +78,7 @@ namespace insightflow_users_service.src.Mappers
         /// </para>
         /// <list type="bullet">
         /// <item>
-        /// <description>Combines FirstName and LastNames into a FullName property</description>
+        /// <description>Combines FirstName and LastName into a FullName property</description>
         /// </item>
         /// <item>
         /// <description>Excludes sensitive data like PasswordHash</description>
@@ -106,7 +106,7 @@ namespace insightflow_users_service.src.Mappers
             return new ViewUserResponse
             {
                 Id = user.Id,
-                FullName = $"{user.FirstName} {user.LastNames}",
+                FullName = $"{user.FirstName} {user.LastName}",
                 Email = user.Email,
                 Username = user.Username,
                 IsActive = user.IsActive ?? true,
@@ -128,7 +128,7 @@ namespace insightflow_users_service.src.Mappers
         /// </para>
         /// <list type="bullet">
         /// <item>
-        /// <description>Updates all basic user properties (FirstName, LastNames, Email, etc.)</description>
+        /// <description>Updates all basic user properties (FirstName, LastName, Email, etc.)</description>
         /// </item>
         /// <item>
         /// <description>Conditionally updates the password hash only if a new password is provided</description>
@@ -153,7 +153,7 @@ namespace insightflow_users_service.src.Mappers
         public static void UpdateUserFromDto(this User user, CreateUserRequest dto)
         {
             user.FirstName = dto.FirstName;
-            user.LastNames = dto.LastName;
+            user.LastName = dto.LastName;
             user.Email = dto.Email;
             user.Username = dto.Username;
             user.Birthdate = dto.BirthDate;

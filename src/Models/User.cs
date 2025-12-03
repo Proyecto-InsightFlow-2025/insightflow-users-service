@@ -21,7 +21,7 @@ namespace insightflow_users_service.src.Models
         /// The User's last names
         /// </summary> 
         [Required, MaxLength(20)]
-        public string LastNames { get; set; } = null!;
+        public string LastName { get; set; } = null!;
 
         /// <summary>
         /// The User's email (@insightflow.cl)

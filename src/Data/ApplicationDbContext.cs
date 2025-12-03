@@ -28,7 +28,7 @@ namespace insightflow_users_service.src.Data
                 {
                     Id = Guid.NewGuid(),
                     FirstName = "Admin",
-                    LastNames = "User",
+                    LastName = "User",
                     Email = "admin@insightflow.cl",
                     Username = "admin_if",
                     Birthdate = new DateOnly(1990, 1, 1),
@@ -43,7 +43,7 @@ namespace insightflow_users_service.src.Data
                 {
                     Id = Guid.NewGuid(),
                     FirstName = "Ignacio",
-                    LastNames = "Avendaño",
+                    LastName = "Avendaño",
                     Email = "ignacio@insightflow.cl",
                     Username = "iavendano",
                     Birthdate = new DateOnly(1995, 5, 20),
@@ -58,7 +58,7 @@ namespace insightflow_users_service.src.Data
                 {
                     Id = Guid.NewGuid(),
                     FirstName = "David",
-                    LastNames = "Araya",
+                    LastName = "Araya",
                     Email = "david@insightflow.cl",
                     Username = "daraya",
                     Birthdate = new DateOnly(1985, 3, 15),
