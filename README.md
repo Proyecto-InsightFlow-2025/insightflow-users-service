@@ -79,7 +79,8 @@ dotnet run
 
 ---
 
-# Endpoints Disponibles (100% fiel al Controller)
+
+# **Endpoints Disponibles**
 
 ---
 
@@ -88,7 +89,7 @@ dotnet run
 ### **POST /user**
 
 Crea un nuevo usuario.
-Controla colisiones por **email** y **username**.
+Valida colisiones por **email** y **username**.
 
 ### Body (CreateUserRequest)
 
@@ -107,36 +108,49 @@ Controla colisiones por **email** y **username**.
 
 ### Respuestas
 
-* **201 Created** + Usuario creado (ViewUserResponse)
-* **400 Bad Request** → Validación fallida
+* **201 Created** → Retorna objeto `ViewUserResponse`
+* **400 Bad Request** → ModelState inválido
 * **409 Conflict** → Email o Username ya existen
 
 ---
 
-#  Listar Usuarios
+# Listar Usuarios (requiere autenticación)
 
-### **GET /user**
+### **GET /user?requestUserId={guid}**
 
-Permite paginar y filtrar.
+Devuelve lista paginada y filtrable.
+
+> **Este endpoint exige el parámetro `requestUserId`**.
+> Si falta o es un GUID vacío → **401 Unauthorized**.
 
 ### Query params (UserQuery)
 
-* `pageNumber`
-* `pageSize`
-* `username`
-* `email`
-* `firstName`
-* `lastName`
+| Param         | Tipo   | Descripción          |
+| ------------- | ------ | -------------------- |
+| pageNumber    | int    | Página actual        |
+| pageSize      | int    | Tamaño de página     |
+| username      | string | Filtrar por username |
+| email         | string | Filtrar por email    |
+| firstName     | string | Filtrar por nombre   |
+| lastName      | string | Filtrar por apellido |
+| requestUserId | Guid   | **Obligatorio**      |
 
 ### Respuesta 200 OK
 
 ```json
 {
-  "items": [ /* lista de usuarios */ ],
+  "items": [
+    { /* Usuario */ }
+  ],
   "totalCount": 3,
   "totalPages": 1
 }
 ```
+
+### Errores
+
+* **401 Unauthorized** → Falta `requestUserId`
+* **400 Bad Request** → Query inválida
 
 ---
 
@@ -144,50 +158,56 @@ Permite paginar y filtrar.
 
 ### **GET /user/{id}**
 
-Retorna un usuario específico.
+Retorna un usuario según su GUID.
+
+### Respuestas
 
 * **200 OK** → Usuario encontrado
 * **404 Not Found** → No existe
 
 ---
 
-# Actualizar Usuario
+# Actualizar Usuario (requiere autenticación)
 
-### **PATCH /user/{id}**
+### **PATCH /user/{id}?requestUserId={guid}**
 
-Actualiza un usuario utilizando **el mismo DTO de creación** (`CreateUserRequest`).
+Actualiza un usuario usando **CreateUserRequest**.
+
+> **Solo puedes editar tu propio perfil.**
+> Si `id != requestUserId` → **401 Unauthorized**
 
 ### Body
 
-El mismo que crear usuario.
+Mismo formato que crear usuario.
 
 ### Respuestas
 
-* **204 No Content** → Actualizado
-* **404 Not Found**
+* **200 OK** → Retorna usuario actualizado (`ViewUserResponse`)
+* **401 Unauthorized** → Intento de editar a otro usuario
+* **404 Not Found** → Usuario no existe
 
 ---
 
-#  Soft Delete Usuario
+# Eliminar Usuario (Soft Delete)
 
-### **PATCH /user/delete/{id}**
+### **DELETE /user/{id}**
 
-Marca `IsActive = false`.
+Marca el usuario como inactivo (`IsActive = false`).
 
-El controller actual **NO usa JWT**, aunque el código comentado sugiere intención futura.
+> El controller **no exige JWT actualmente**.
 
 ### Respuestas
 
-* **204 No Content**
-* **404 Not Found**
+* **204 No Content** → Eliminado
+* **404 Not Found** → No existe
 
 ---
 
-#  Login
+# Login
 
 ### **POST /user/login**
 
-Autentica usuario y retorna datos básicos.
+Autentica y retorna datos básicos del usuario.
 
 ### Body
 
@@ -198,11 +218,12 @@ Autentica usuario y retorna datos básicos.
 }
 ```
 
-### Reglas del controlador
+### Flujo del controlador
 
-1. Busca usuario por **Email**.
-2. Compara `PasswordHash` con el string enviado.
-3. Verifica `IsActive == true`.
+1. Busca usuario por email
+2. Verifica contraseña con **BCrypt**
+3. Verifica `IsActive == true`
+4. Devuelve datos básicos
 
 ### Respuesta 200 OK
 
