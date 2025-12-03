@@ -155,54 +155,38 @@ namespace insightflow_users_service.src.Controllers
             return NoContent();
         }
 
-
         /// <summary>
-        /// Verifies existence of credentials.
+        /// Authenticates a user and returns their ID for the frontend to store.
         /// </summary>
-        /// <param name="request">The login request from an auth service.</param>
-        /// <returns>
-        /// Returns 400 If neither email nor username is provided.
-        /// Returns 401 If credentials are invalid or account is disabled.
-        /// Returns 200 OK with basic User info on successful verification.
-        /// </returns>
-        // [HttpPost("credentials")]
-        // public async Task<IActionResult> VerifyCredentials([FromBody] VerifyCredentialsRequest request)
-        // {
-        //     if (string.IsNullOrWhiteSpace(request.Email) && string.IsNullOrWhiteSpace(request.Username))
-        //         return BadRequest("Debe proporcionar un correo electrónico o un nombre de usuario.");
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginDto)
+        {
+            // 1. Find user by Email
+            var user = await _repository.GetByEmailAsync(loginDto.Email);
 
-        //     if (string.IsNullOrWhiteSpace(request.Password))
-        //         return BadRequest("La contraseña es obligatoria.");
+            // 2. Validate User exists and Password matches
+            // (In a real app, verify hash. Here we compare strings per workshop scope)
+            if (user == null || user.PasswordHash != loginDto.Password)
+            {
+                return Unauthorized(new { message = "Credenciales incorrectas" });
+            }
 
-        //     // Buscar User por email o username
-        //     var user = !string.IsNullOrWhiteSpace(request.Email)
-        //         ? await _repository.GetByEmailAsync(request.Email)
-        //         : await _repository.GetByUsernameAsync(request.Username!);
+            // 3. Check if user is active
+            if (!(user.IsActive ?? false))
+            {
+                return Unauthorized(new { message = "Usuario inactivo" });
+            }
 
-        //     if (user == null)
-        //         return Unauthorized("Credenciales inválidas.");
+            // 4. Return the ID. The Frontend MUST store this in localStorage.
+            return Ok(new
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastNames = user.LastNames,
+                Email = user.Email
+            });
+        }
 
-        //     // Validar que la cuenta no ha sido eliminada
-        //     bool disabled = user.IsActive == false;
-        //     if (disabled)
-        //         return Unauthorized("La cuenta que está intentando acceder ha sido desactivada.");
-
-        //     // Validar contraseña (comparación segura con hash)
-        //     bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
-        //     if (!isPasswordValid)
-        //         return Unauthorized("Credenciales inválidas.");
-
-        //     // Opcional: devolver datos básicos del User
-        //     var response = new
-        //     {
-        //         user.Id,
-        //         user.Role,
-        //         user.Username,
-        //         user.Email,
-        //         user.IsActive
-        //     };
-
-        //     return Ok(response);
-        // }
     }
 }
