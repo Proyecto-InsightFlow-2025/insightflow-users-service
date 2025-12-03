@@ -142,21 +142,9 @@ namespace insightflow_users_service.src.Controllers
         /// Returns 403 Forbidden if the token does not belong to an authorized role.
         /// Returns 404 Not Found if the User does not exist.
         /// </returns>
-        [HttpDelete("delete/{id:guid}")]
-        public async Task<ActionResult> SoftDelete(Guid id, [FromHeader(Name = "Authorization")] string authHeader)
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult> SoftDelete(Guid id)
         {
-            // if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            //     return Unauthorized("Debe proporcionar un token válido.");
-
-            // var token = authHeader.Substring("Bearer ".Length).Trim();
-            // var validated = await _tokenVerifier.VerifyTokenAsync(token);
-
-            // if (validated == null)
-            //     return Unauthorized("Token inválido o expirado.");
-
-            // if (validated.Role != "1")
-            //     return Forbid("No tiene permisos para realizar esta acción.");
-
             var user = await _repository.GetByIdAsync(id);
             if (user == null)
                 return NotFound();
