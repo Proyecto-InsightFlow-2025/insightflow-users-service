@@ -148,15 +148,29 @@ namespace insightflow_users_service.src.Mappers
         /// </code>
         /// </example>
         /// </remarks>
-        public static void UpdateUserFromDto(this User user, CreateUserRequest dto)
+        public static void UpdateUserFromDto(this User user, UpdateUserRequest dto)
         {
-            user.FirstName = dto.FirstName;
-            user.LastName = dto.LastName;
-            user.Email = dto.Email;
-            user.Username = dto.Username;
-            user.Birthdate = dto.BirthDate;
-            user.Address = dto.Address;
-            user.PhoneNumber = dto.PhoneNumber;
+            if (!string.IsNullOrEmpty(dto.FirstName)) 
+                user.FirstName = dto.FirstName;
+
+            if (!string.IsNullOrEmpty(dto.LastName)) 
+                user.LastName = dto.LastName;
+
+            if (!string.IsNullOrEmpty(dto.Email)) 
+                user.Email = dto.Email;
+
+            if (!string.IsNullOrEmpty(dto.Username)) 
+                user.Username = dto.Username;
+
+            if (dto.BirthDate.HasValue) 
+                user.Birthdate = dto.BirthDate.Value;
+
+            if (!string.IsNullOrEmpty(dto.Address)) 
+                user.Address = dto.Address;
+
+            if (!string.IsNullOrEmpty(dto.PhoneNumber)) 
+                user.PhoneNumber = dto.PhoneNumber;
+                
             if (!string.IsNullOrEmpty(dto.Password))
                 user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
         }

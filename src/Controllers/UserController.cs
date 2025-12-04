@@ -113,7 +113,7 @@ namespace insightflow_users_service.src.Controllers
         /// Returns 404 Not Found if the User does not exist.
         /// </returns>
         [HttpPatch("{id:guid}")]
-        public async Task<ActionResult> Update(Guid id, [FromBody] CreateUserRequest dto, [FromQuery] Guid requestUserId)
+        public async Task<ActionResult> Update(Guid id, [FromBody] UpdateUserRequest dto, [FromQuery] Guid requestUserId)
         {
 
             if (!ModelState.IsValid)
