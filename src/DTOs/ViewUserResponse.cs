@@ -21,14 +21,21 @@ namespace insightflow_users_service.src.DTOs
         /// A GUID that uniquely identifies the client in the system.
         /// </value>
         public Guid Id { get; set; }
-
         /// <summary>
-        /// Gets or sets the full name of the client.
+        /// Gets or sets the first name of the client.
         /// </summary>
         /// <value>
-        /// The concatenated full name of the client, typically composed of first name and last names.
+        /// The first name of the client.
         /// </value>
-        public string FullName { get; set; } = null!;
+        public string FirstName { get; set; } = null!;
+
+        /// <summary>
+        /// Gets or sets the last name of the client.
+        /// </summary>
+        /// <value>
+        /// The last name of the client.
+        /// </value>
+        public string LastName { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets the client's email address.

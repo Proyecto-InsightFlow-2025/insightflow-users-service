@@ -115,6 +115,10 @@ namespace insightflow_users_service.src.Controllers
         [HttpPatch("{id:guid}")]
         public async Task<ActionResult> Update(Guid id, [FromBody] CreateUserRequest dto, [FromQuery] Guid requestUserId)
         {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             if (id != requestUserId)
             {
                 return Unauthorized(new { message = "No tienes permisos para editar este perfil." });

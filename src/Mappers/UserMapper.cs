@@ -78,9 +78,6 @@ namespace insightflow_users_service.src.Mappers
         /// </para>
         /// <list type="bullet">
         /// <item>
-        /// <description>Combines FirstName and LastName into a FullName property</description>
-        /// </item>
-        /// <item>
         /// <description>Excludes sensitive data like PasswordHash</description>
         /// </item>
         /// <item>
@@ -106,7 +103,8 @@ namespace insightflow_users_service.src.Mappers
             return new ViewUserResponse
             {
                 Id = user.Id,
-                FullName = $"{user.FirstName} {user.LastName}",
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Email = user.Email,
                 Username = user.Username,
                 IsActive = user.IsActive ?? true,
